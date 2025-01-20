@@ -1,0 +1,42 @@
+services:
+  app:
+    build: .
+    container_name: csv_microservice
+    ports:
+      - "8080:8080"
+    command: ["go", "run", "/app/main.go"]
+    volumes:
+      - C:\Users\puja.priyanshu\Desktop\Practise\.vscode\Go_Practise\week4\csv-microservice:/app
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+      DB_NAME: device_data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pujapriyanshu10@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: device_data
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    command: postgres -c max_connections=200  
+
+volumes:
+  pgdata:
